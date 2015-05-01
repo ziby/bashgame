@@ -27,9 +27,6 @@ trap Restore EXIT
 ORIG=`stty -g`
 stty -echo
 
-# Убирам курсор
-echo -e "\033[?25l"
-
 function React {
     case $1 in
         $KLEFT)
@@ -127,7 +124,16 @@ function PrintField {
 	local x y
 	for y in {1..8}; do
     	for x in {1..8}; do
-    		echo -en "${XY[$x+y*10]}"
+    		echo -en "${XY[$x+$y*10]}"
+        done
+    done
+}
+
+function InitField {
+  local x y
+  for y in {1..8}; do
+      for x in {1..8}; do
+        XY[$x+$y*10] = "_"
         done
     done
 }
