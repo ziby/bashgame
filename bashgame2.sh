@@ -12,13 +12,23 @@ KRIGHT=1b5b43
 KSPACE=20
 Subj='o'
 
+# Восстановление экрана
+function Restore {
+    echo -ne "\033[5B\033[5B\033[?25h\033[m"
+    stty "$ORIG" 2>/dev/null
+    (bind '"\r":accept-line' 2>/dev/null)
+}
 
-# Убирам курсор
-echo -e "\033[?25l"
+trap Restore EXIT
 
+# Выключаем Enter
+(bind -r '\r' 2>/dev/null)
 # Выключаем остальную клавиатуру
 ORIG=`stty -g`
 stty -echo
+
+# Убирам курсор
+echo -e "\033[?25l"
 
 function React {
     case $1 in
@@ -124,6 +134,8 @@ function PrintField {
 
 
 # Основная часть программы
-ClearKbBuffer
-PrintField
-PressEvents
+while true; do
+  ClearKbBuffer
+  PrintField
+  PressEvents
+done
